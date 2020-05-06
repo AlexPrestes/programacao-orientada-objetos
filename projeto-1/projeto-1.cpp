@@ -1,11 +1,10 @@
 #include <algorithm>  // Para std::sort
 #include <fstream>    // Para std::ifstream e std::getline
 #include <functional> // Para std::function
-#include <iomanip>    // Para std::setw
 #include <iostream>   // Para std::cout, std::endl
 #include <string>     // Para std::string, std::stod, std::stoi
 #include <vector>     // Para std::vector
-#include <cmath>      // Para std::pow
+#include <cmath>      // Para std::pow, std::sqrt
 
 //=====================================================================
 //
@@ -27,7 +26,7 @@ struct Caixa {
 //=====================================================================
 
 // Função que lê os dados double do arquivo.
-std::vector<double> le_dados(std::string nome_arquivo);
+std::vector<double> le_arquivo(std::string nome_arquivo);
 
 // Função que recebe vetor double e mostra média e desvio padrão.
 std::vector<double> mostra_media_desvio(std::vector<double> valores);
@@ -47,7 +46,7 @@ int main(int , char const *argv[]) {
     auto B = std::stoi(argv[2]);
     
     // chama a função que le os dados do arquivo.
-    auto valores = le_dados(nome_arquivo);
+    auto valores = le_arquivo(nome_arquivo);
 
     // calcula média e desvio padrão do arquivo.
     auto media_desvio = mostra_media_desvio(valores);
@@ -71,19 +70,21 @@ int main(int , char const *argv[]) {
 // Funções auxiliares
 //
 //=====================================================================
-
-std::vector<double> le_dados(std::string nome_arquivo) {
+std::vector<double> le_arquivo(std::string nome_arquivo) {
     std::ifstream arquivo(nome_arquivo);
+    std::istream &linha(arquivo);
     std::vector<double> valores;
+    std::string valor;
 
-    for ( std::string linha; std::getline(arquivo, linha, ' '); ) {
-        try {
-            valores.push_back(std::stod(linha));
-        } catch (...) {}
+    while ( linha.good() && !linha.eof() ) {
+        linha >> valor;
+        
+        if ( linha.good() ) {
+            valores.push_back(std::stod(valor));
+        }
     }
     return valores;
 }
-
 
 std::vector<double> mostra_media_desvio(std::vector<double> valores) {
     std::vector<double> media_desvio;
