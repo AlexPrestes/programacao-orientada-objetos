@@ -1,5 +1,5 @@
 # Terceiro trabalho: Herança e polimorfismo
-Anexo você tem um código que implementa uma classe para guardar e consultar valores. Cada valor é armazenado apenas uma vez, e a busca de valores é eficiente, apesar da inserção de novos valores ser custosa.
+Anexo você tem um código (t3.cpp) que implementa uma classe para guardar e consultar valores. Cada valor é armazenado apenas uma vez, e a busca de valores é eficiente, apesar da inserção de novos valores ser custosa.
 
 Essa classe permite inserir uma quantidade ilimitada de valores.
 
