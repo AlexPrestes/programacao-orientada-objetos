@@ -1,4 +1,4 @@
-#Quarta prática: Templates
+# Quarta prática: Templates
 Anexo está novamente o código da classe usada no trabalho anterior.
 
 Neste caso, sua tarefa é transformar essa classe em um **template**, de tal forma que ao invés de apenas inteiros, possa-se armazenar qualquer tipo de objeto que tenha sobrecarga do operador < (que é o operador usado no código dos métodos da classe).
