@@ -1,21 +1,32 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <typeinfo>
+
+
+template<typename _type>
+struct LimiteExcedido {
+    _type val;
+};
 
 // Classe que mantem um conjunto de valores sem duplicacao e em ordem crescente.
 // Permite verificar a existencia ou nao de um valor e pegar uma faixa de
 // elementos entre dois valores especificados.
-class OrderedUniqueValues {
+template<class _type>
+class OrderedUniqueValues : public std::vector<_type> {
   // Invariante:
   // Se size() > 1 && 0 <= i < size()-1 então _data[i] < data[i+1]
-  std::vector<int> _data;
+  std::vector<_type> _data;
 
 public:
+
+  using std::vector<_type>::vector;
+
   // Sinonimmo de um tipo para iterador para os elementos.
   using const_iterator = std::vector<int>::const_iterator;
 
   // Verifica se um elementos com o dado valor foi inserido.
-  bool find(int value) {
+  bool find(_type value) {
     // Como os dados estao ordenados em _data, entao basta fazer uma busca
     // binaria.
     return std::binary_search(begin(_data), end(_data), value);
@@ -24,8 +35,8 @@ public:
   // Retorna um par de iteradores para o primeiro e um depois do ultimo
   // valores que sao maiores ou iguais a min_value e menores ou iguais a
   // max_value.
-  std::pair<const_iterator, const_iterator> find_range(int min_value,
-                                                       int max_value) const {
+  std::pair<const_iterator, const_iterator> find_range(_type min_value,
+                                                       _type max_value) const {
     // Dados ordenados em _data, entao podemos usar lower_bound e upper_bound.
     // Encontra o primeiro elemento que tem valor maior ou igual a min_value.
     auto first = std::lower_bound(begin(_data), end(_data), min_value);
@@ -38,7 +49,7 @@ public:
   size_t size() const { return _data.size(); }
 
   // Insere um novo elemento, se nao existir ainda.
-  void insert(int value) {
+  virtual void insert(_type value) {
     auto [first, last] = std::equal_range(begin(_data), end(_data), value);
     if (first == last) {
       _data.insert(last, value);
@@ -46,11 +57,36 @@ public:
   }
 };
 
+
+// Classe derivada de OrderedUniqueValues
+// Permite instanciar uma classe OrderedUniqueValues com tamanho limitado
+template<class _type>
+class LimitedOrderedUniqueValues : public OrderedUniqueValues<_type> {
+    size_t _limit;
+
+public:
+    LimitedOrderedUniqueValues(int limit) {
+        if (limit >= 0) {
+            _limit = limit;
+        }
+    }
+
+    void insert(_type value) override {
+        if (size() < _limit) {
+            OrderedUniqueValues::insert(value);
+        } else {
+            throw LimiteExcedido{value};
+        }
+    }
+};
+
 int main(int, char *[]) {
   // Alguns testes simples.
-  std::vector<int> some_values{7, -10, 4, 8, -2, 9, -10, 8, -5, 6, -9, 5, 200};
-  std::vector<size_t> some_sizes{1, 2, 3, 4, 5, 6, 6, 6, 7, 8, 9, 10};
-  OrderedUniqueValues ouv;
+  std::vector<char>   some_values{'j', 'a', 'b', 'g', 'v', 'k', 'g', 'b', 'h', 'i', 'o',  'p' };
+  std::vector<size_t> some_sizes{ 1 ,  2 ,  3 ,  4 ,  5 ,  6,   6 ,  6 ,  7 ,  8 ,  9 ,   10 };
+  
+
+  OrderedUniqueValues<char> ouv;
   for (size_t i = 0; i < some_values.size(); ++i) {
     ouv.insert(some_values[i]);
     if (ouv.size() != some_sizes[i]) {
@@ -81,5 +117,6 @@ int main(int, char *[]) {
                 << std::endl;
     }
   }
+
   return 0;
 }
