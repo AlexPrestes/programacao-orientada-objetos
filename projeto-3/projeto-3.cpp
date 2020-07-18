@@ -60,9 +60,7 @@ class LimitedOrderedUniqueValues : public OrderedUniqueValues {
 
 public:
     LimitedOrderedUniqueValues(int limit) {
-        if (limit >= 0) {
-            _limit = limit;
-        }
+        _limit = (limit > 0) ? limit : 0;
     }
 
     void insert(int value) override {
@@ -121,6 +119,7 @@ int main(int, char *[]) {
   
   std::cout << "Inicio testes classe derivada" << std::endl;
   LimitedOrderedUniqueValues louv{10};
+
   for (size_t i = 0; i < some_values.size(); ++i) {
     louv.insert(some_values[i]);
     if (louv.size() != some_sizes[i]) {
