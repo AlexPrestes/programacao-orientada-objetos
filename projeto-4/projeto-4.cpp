@@ -1,8 +1,12 @@
+//##################################################################################
+// As mudanças do feitas foram:
+// adição de 3 templates para struct e as duas classe
+// e na linha 74 foi necessário utilizar o operador this
+
 #include <algorithm>
 #include <iostream>
 #include <vector>
 #include <typeinfo>
-
 
 template<typename T>
 struct LimiteExcedido {
@@ -75,6 +79,7 @@ public:
     }
 };
 
+
 int main(int, char *[]) {
   // Alguns testes simples.
   std::vector<int>   some_values{ 7 , -10,  4 ,  8 , -2 ,  9 , -10,  8 , -5 ,  6 , -9 ,  5 , 200};
@@ -88,7 +93,7 @@ int main(int, char *[]) {
 
   std::cout << "Teste: int" << std::endl;
 
-  LimitedOrderedUniqueValues<int> louvi(10);
+  LimitedOrderedUniqueValues<int> louvi(9);
 
 
   try {
@@ -113,7 +118,7 @@ int main(int, char *[]) {
     }
   }
 
-  auto [first1i, last1i] = louvi.find_range(0, 10);
+  auto [first1i, last1i] = louvi.find_range(0, 9);
   for (auto current = first1i; current != last1i; ++current) {
     if (*current < 0) {
       std::cerr << "Erro na selecao dos valores nao-negativos: " << *current
@@ -128,13 +133,13 @@ int main(int, char *[]) {
     }
   }
  
-  // ########################
+  // #########################
   // # Teste para vetor char #
-  // ########################
+  // #########################
 
   std::cout << "Teste: char" << std::endl;
 
-  LimitedOrderedUniqueValues<char> louvc(10);
+  LimitedOrderedUniqueValues<char> louvc(9);
 
   try {
       
@@ -158,14 +163,14 @@ int main(int, char *[]) {
     }
   }
 
-  auto [first1c, last1c] = louvc.find_range(0, 9);
+  auto [first1c, last1c] = louvc.find_range(0, 10);
   for (auto current = first1c; current != last1c; ++current) {
     if (*current < 0) {
       std::cerr << "Erro na selecao dos valores nao-negativos: " << *current
                 << std::endl;
     }
   }
-  auto [first2c, last2c] = louvc.find_range(-10, 0);
+  auto [first2c, last2c] = louvc.find_range(-11, 0);
   for (auto current = first2c; current != last2c; ++current) {
     if (*current >= 0) {
       std::cerr << "Erro na selecao dos valores negativos: " << *current
